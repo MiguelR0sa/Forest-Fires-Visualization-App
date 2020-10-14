@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <!--<script src="https://d3js.org/d3.v5.js"></script>
+ <script src="https://d3js.org/topojson.v1.min.js"></script>-->
+  <script src="lib/d3.js"></script>
+  <script src="lib/topojson.js"></script>
+
+  <script type="text/javascript" src="lib/barLib.js"></script>
+  <script type="text/javascript" src="lib/filter.js"></script>
+  <script type="text/javascript" src="lib/buttons.js"></script>
+  <script type="text/javascript" src="lib/mapLib.js"></script>
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+  <style>
+    html
+    body {
+      position: static;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: #D0D0D0;
+    }
+
+    #body {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: #D0D0D0;
+    }
+
+    #divMap {
+      position: absolute;
+      width: 49.5%;
+      height: 100%;
+
+      background-color: #FFFFFF;
+    }
+
+    #div2 {
+      position: absolute;
+      width: 50%;
+      height: 49%;
+      left: 50%;
+      top: 0;
+
+      background-color: #FFFFFF;
+    }
+
+    #div3 {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      left: 50%;
+      top: 50%;
+
+      background-color: #FFFFFF;
+    }
+
+    #title1 {
+      position: absolute;
+      width: 10%;
+      height: 2%;
+      left: 85%;
+      top: -7px;
+
+      background-color: #FFFFFF;
+    }
+
+    #title2 {
+      position: absolute;
+      width: 10%;
+      height: 2%;
+      left: 85%;
+      top: 50%;
+
+      background-color: #FFFFFF;
+    }
+
+    .svg-container {
+      display: inline-block;
+      position: relative;
+      width: 100%;
+      vertical-align: middle;
+      overflow: hidden;
+    }
+
+    .svg-content-responsive {
+      display: inline-block;
+      position: absolute;
+      top: 10px;
+      left: 0;
+    }
+
+    #filter_container1 {
+      position: fixed;
+      left: 66%;
+      top: 5px;
+    }
+
+    #filter_slider {
+      display: none;
+    }
+
+    .zoom_button_container {
+      position: fixed;
+      left: 57%;
+      top: -10px;
+      transform: scale(1.7);
+    }
+
+    .brush_button_container {
+      position: fixed;
+      left: 60%;
+      top: -10px;
+      transform: scale(1.7);
+    }
+
+    .undo_button_container {
+      position: fixed;
+      left: 63%;
+      top: -10px;
+      transform: scale(1.7);
+    }
+
+    .brazil_button_container {
+      position: fixed;
+      left: 90%;
+      top: -13px;
+      transform: scale(1.1);
+    }
+
+    .zoom_button_container2 {
+      position: fixed;
+      left: 57%;
+      top: 49%;
+      transform: scale(1.7);
+    }
+
+    .brush_button_container2 {
+      position: fixed;
+      left: 60%;
+      top: 49%;
+      transform: scale(1.7);
+    }
+
+    .undo_button_container2 {
+      position: fixed;
+      left: 63%;
+      top: 49%;
+      transform: scale(1.7);
+    }
+
+    .brazil_button_container2 {
+      position: fixed;
+      left: 90%;
+      top: 48.5%;
+      transform: scale(1.1);
+    }
+
+    #filter_slider2 {
+      display: none;
+    }
+
+    #filter_container2 {
+      position: fixed;
+      left: 66%;
+      top: 51%;
+    }
+
+    #filter_container_map {
+      position: fixed;
+      left: 1%;
+      top: 20%;
+    }
+
+    #button_reset_map {
+      position: absolute;
+      left: 30px;
+      top: 250px;
+    }
+
+    #legend_map {
+      position: absolute;
+      font-size: 18px;
+      font-weight: bold;
+      left: 12px;
+      top: 275px;
+    }
+
+    #label_map {
+      position: absolute;
+      font-size: 16px;
+      left: 12px;
+      top: 300px;
+    }
+
+    #filter_slider_map {
+      display: inline;
+      color: black;
+    }
+
+    #dropdown0 {
+      position: fixed;
+      left: 2%;
+      top: 14%;
+      transform: scale(1.2);
+      display: inline-block;
+    }
+
+
+    #dropdown1 {
+      position: fixed;
+      left: 50%;
+      top: 0;
+      display: inline-block;
+    }
+
+    #dropdown2 {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      display: inline-block;
+    }
+
+    .dropdown-content0 {
+      display: none;
+      position: absolute;
+      background-color: #f1f1f1;
+      min-width: 160px;
+      overflow: auto;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f1f1f1;
+      min-width: 160px;
+      overflow: auto;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+
+    .dropdown-content1 {
+      display: none;
+      position: absolute;
+      background-color: #f1f1f1;
+      min-width: 160px;
+      overflow: auto;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content1 a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content0 a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown a:hover {
+      background-color: rgb(141, 135, 135);
+    }
+
+    .show {
+      display: block;
+    }
+
+    /*
+    CSS for the Tooltip, shows a dialog message when hovering something with this style
+    From: https://stackoverflow.com/questions/33063374/display-tooltip-close-to-the-mouse-pointer-using-d3-js-in-a-scatter-plot
+    */
+    tip.tooltip {
+      position: absolute;
+      width: auto;
+      height: auto;
+      padding: 3px;
+      font: 14px sans-serif;
+      color: white;
+      background: #242424;
+      pointer-events: none;
+    }
+
+    .fa:hover {
+      color: teal;
+    }
+  </style>
+
+
+</head>
+
+<body>
+
+<div id="body"></div>
+<div id="divMap"></div>
+<div id="button_reset_map">
+  <button onclick="reset('resources/brazilstates.json')" class="reset" id="reset" data-toggle="tooltip"
+          title="Change map and legend to show Aggregated Data for all years" disabled>All Years Aggregated</button>
+</div>
+<div class="filter_container" id="filter_container_map">
+  <label style="font-size:20px;">Year: <input type="range" id="filter_slider_map"/> </label>
+  <p id="legend_map"></p>
+  <p id="label_map"></p>
+</div>
+<div class="dropdown" id="dropdown0">
+  <p class="buttonLegend" style="font-size:10px; margin-top:0; margin-bottom:0; ">Selected Panel </p>
+  <button onclick="myFunction0('myDropdown0')" class="dropbtn0" id="d0" data-toggle="tooltip"
+          title="Change panel &#013You can also click on the desired panel ">Top Panel
+  </button>
+  <div id="myDropdown0" class="dropdown-content0">
+    <a href="#top" onclick="setCurrentDiv2()">Top Panel</a>
+    <a href="#bot" onclick="setCurrentDiv3()">Bottom Panel</a>
+  </div>
+</div>
+
+
+<div id="div2" onclick="setCurrentDiv2()" ondblclick="rollBack1()"></div>
+<div id="title1">
+  <p style="font-size:10px ;">Selected Area: </p>
+  <p id="t1" style="line-height: 0;"> Brazil
+  <p>
+</div>
+<div class="dropdown" id="dropdown1" data-toggle="tooltip" title="Plot by year over a single year period">
+  <p class="buttonLegend" style="font-size:10px; margin-top:0; margin-bottom:0; ">Binning | X Axis </p>
+  <button onclick="myFunction('myDropdown1')" class="dropbtn" id="d1" data-toggle="tooltip"
+          title="Choose the bar chart time lapse">Year
+  </button>
+  <div id="myDropdown1" class="dropdown-content">
+    <a href="#Year" onclick="action1()" data-toggle="tooltip" title="Plot by year over the whole period">Year</a>
+    <a href="#Month" onclick="action2()" data-toggle="tooltip" title="Plot by month over the whole period">Month</a>
+    <a href="#SingleYear" onclick="action3()" data-toggle="tooltip" title="Plot by year over a single year period">Single
+      Year</a>
+  </div>
+  <div class="filter_container" id="filter_container1">
+    <label><input type="range" id="filter_slider"/> </label>
+    <p id="label"></p>
+  </div>
+</div>
+<div class="zoom_button_container">
+  <p>
+    <a href="#" onclick="zoom()" (svgBars)>
+      <i id="zoom1" style="color:teal" class="fa fa-search-plus" data-toggle="tooltip" title="Brush to zoom in"></i>
+    </a>
+  </p>
+</div>
+<div class="brush_button_container">
+  <p>
+    <a href="#" onclick="brush2Map()" (svgBars)>
+      <i id="brush1" class="fa fa-arrow-left" data-toggle="tooltip" title="Brush to change the map's time lapse"></i>
+    </a>
+  </p>
+</div>
+
+<div class="undo_button_container">
+  <p>
+    <a href="#" onclick="rollBack1()" (svgBars)>
+      <i class="fa fa-undo" data-toggle="tooltip"
+         title="Undo last action &#013You can also double click the desired panel"></i>
+    </a>
+  </p>
+
+</div>
+<div class="brazil_button_container">
+  <p>
+    <a href="#" onclick="brush2Map()" (svgBars)>
+      <i id="brazil1" class="fa fa-globe" onclick="countryPlot()" data-toggle="tooltip"
+         title="Select the whole country"></i>
+    </a>
+  </p>
+</div>
+
+<div id="div3" onclick="setCurrentDiv3()" ondblclick="rollBack2()"></div>
+<div id="title2">
+  <p class="buttonLegend" style="font-size:10px; margin-top:0; ">Selected Area: </p>
+  <p id="t2" style="line-height: 0;"> Brazil
+  <p>
+</div>
+<div class="dropdown" id="dropdown2">
+  <p class="buttonLegend" style="font-size:10px; margin-top:0; margin-bottom:0; ">Binning | X Axis </p>
+  <button onclick="myFunction('myDropdown2')" class="dropbtn1" id="d2" data-toggle="tooltip"
+          title="Choose the bar chart time lapse">Month
+  </button>
+  <div id="myDropdown2" class="dropdown-content1">
+    <a href="#Year" onclick="action4()" data-toggle="tooltip" title="Plot by year over the whole period">Year</a>
+    <a href="#Month" onclick="action5()" data-toggle="tooltip" title="Plot by month over the whole period">Month</a>
+    <a href="#SingleYear" onclick="action6()" data-toggle="tooltip" title="Plot by year over a single year period">Single
+      Year</a>
+
+  </div>
+
+
+  <div class="filter_container" id="filter_container2">
+    <label><input type="range" id="filter_slider2"/> </label>
+    <p id="label2"></p>
+  </div>
+</div>
+<div class="zoom_button_container2">
+  <p>
+    <a href="#" onclick="zoom2()" (svgBars)>
+      <i id="zoom2" style="color:teal" class="fa fa-search-plus" data-toggle="tooltip" title="Brush to zoom in"></i>
+    </a>
+  </p>
+</div>
+<div class="brush_button_container2">
+  <p>
+    <a href="#" onclick="brush2Map2()" (svgBars)>
+      <i id="brush2" class="fa fa-arrow-left" data-toggle="tooltip" title="Brush to change the map's time lapse"></i>
+    </a>
+  </p>
+</div>
+<div class="undo_button_container2">
+  <p>
+    <a href="#" onclick="rollBack2()" (svgBars)>
+      <i class="fa fa-undo" data-toggle="tooltip"
+         title="Undo last action &#013You can also double click the desired panel"></i>
+    </a>
+  </p>
+</div>
+
+<div class="brazil_button_container2">
+  <p>
+    <a href="#" onclick="brush2Map()" (svgBars)>
+      <i id="brazil2" class="fa fa-globe" onclick="countryPlot()" data-toggle="tooltip"
+         title="Select the whole country"></i>
+    </a>
+  </p>
+</div>
+
+
+<script type="text/javascript">
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', afterLoaded);
+  } else {
+    //The DOMContentLoaded event has already fired. Just run the code.
+    afterLoaded();
+  }
+
+  function afterLoaded() {
+
+
+    let mapLoaded = d3.json("resources/brazilstates.json");
+    mapLoaded.then(draw);
+  }
+</script>
+
+
+<script type="text/javascript">
+
+  // save state of visual variables to brush and filter
+  let y_axis;
+  let barsRect, barScales;
+  let filteredState, filteredState1, filteredState2;
+  let ele = document.getElementById('div2');
+  let barheight = parseInt(ele.clientHeight) - 20;
+  let barWidth = parseInt(ele.clientWidth) - 50;
+  let countryMonthSum, countryYearSum;
+
+  /*
+  Variable of class tooltip, used in Body, excerpt to prepare for future usage.
+  From: https://stackoverflow.com/questions/33063374/display-tooltip-close-to-the-mouse-pointer-using-d3-js-in-a-scatter-plot
+  */
+  let tip = d3.select("body")
+    .append("tip")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+
+
+  //State variables
+  let currentDiv = "#div2";
+  let svgBars;
+  let xTime;
+  let barState = 1; 
+  let countryState = 1,
+    countryState1 = 1,
+    countryState2 = 1; 
+  let flag = 1,
+    flag2 = 1,
+    flag3 = 2;
+  let rawData;
+  let brushGroup,
+    brushGroup1,
+    brushGroup2;
+  let sel;
+  let zoomed;
+  let selX,
+    selT;
+  let previousState1,
+    tmpState1,
+    previousState2,
+    tmpState2;
+  let previousName1 = "Brazil",
+    previousName2 = "Brazil";
+  let previousDropName1 = "Brazil",
+    previousDropName2 = "Brazil";
+  let previousFlag1 = 1,
+    previousFlag2 = 2;
+  let prevSlider1 = 0,
+    tmpSlider1 = 0,
+    prevSlider2 = 0;
+  tmpSlider2 = 0;
+  let zoomFlag = 1,
+    zoomFlag1 = 1,
+    zoomFlag2 = 1; 
+  let brushFlag = 0,
+    brushFlag1 = 0,
+    brushFlag2 = 0;
+
+  //title
+  let title,
+    title1,
+    title2;
+
+  function showFlags() {
+    console.log("countryState", countryState, "flag", flag, "flag2", flag2, "flag3", flag3, "zoomFlag", zoomFlag, "brushFlag", brushFlag)
+  }
+</script>
+</body>
+</html>
